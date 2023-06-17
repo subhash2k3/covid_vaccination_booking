@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .vaccination-centres {
+            margin-top: 30px;
+        }
+
+        .vaccination-centres h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .vaccination-centres ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .vaccination-centres li {
+            margin-bottom: 10px;
+        }
+
+        .apply-button {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .apply-button button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .logout-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .logout-button button {
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, <span id="username"></span></h1>
+
+        <div class="vaccination-centres">
+            <h2>Vaccination Centres</h2>
+            <ul id="vaccination-centres-list"></ul>
+        </div>
+
+        <div class="apply-button">
+            <button id="apply-button">Apply for Vaccination Slot</button>
+        </div>
+
+        <div class="logout-button">
+            <button id="logout-button">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // Fetch vaccination centres and working hours from the server
+        function fetchVaccinationCenters() {
+            // Make an API call to retrieve vaccination centres data
+            // Replace the API_URL with the actual endpoint to fetch vaccination centres
+
+            // Example API call using Fetch API
+            fetch(API_URL)
+                .then(response => response.json())
+                .then(data => {
+                    // Display the vaccination centres on the page
+                    const vaccinationCentresList = document.getElementById('vaccination_centers-list');
+                    vaccinationCentresList.innerHTML = '';
+
+                    data.forEach(centre => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${centre.name} - ${centre.working_hours}`;
+                        vaccinationCentresList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error(error));
+        }
+
+        // Apply for a vaccination slot
+        function applyForSlot() {
+            // Make an API call to apply for a vaccination slot
+            // Replace the API_URL with the actual endpoint to apply for a slot
+
+            // Example API call using Fetch API
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ username: 'user123' }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                })
+                .catch(error => console.error(error));
+        }
+
+        // Logout
+        function logout() {
+            // Make an API call to logout
+            // Replace the API_URL with the actual endpoint to logout
+
+            // Example API call using Fetch API
+            fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => {
+                    // Redirect to the login page after successful logout
+                    window.location.href = 'login.html';
+                })
+                .catch(error => console.error(error));
+        }
+
+        // Get the username from the session and display it on the page
+        const usernameElement = document.getElementById('username');
+        const username = sessionStorage.getItem('username');
+        if (username) {
+            usernameElement.textContent = username;
+        }
+
+        // Fetch vaccination centres when the page loads
+        fetchVaccinationCentres();
+
+        // Event listener for the "Apply for Vaccination Slot" button
+        document.getElementById('apply-button').addEventListener('click', applyForSlot);
+
+        // Event listener for the "Logout" button
+        document.getElementById('logout-button').addEventListener('click', logout);
+    </script>
+</body>
+</html>
